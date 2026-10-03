@@ -1,0 +1,4 @@
+<a href="{% url 'notifications' %}" class="nav-bell {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}" title="Notifications">
+    <i class="bi bi-bell{% if unread_notifications %}-fill{% endif %}"></i>
+    {% if unread_notifications %}<span class="badge bg-danger">{% if unread_notifications > 99 %}99+{% else %}{{ unread_notifications }}{% endif %}</span>{% endif %}
+</a>

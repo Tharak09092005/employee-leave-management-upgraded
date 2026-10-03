@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="fw-bold mb-0"><i class="bi bi-bell-fill me-2 text-primary"></i>Notifications
+        {% if unread_notifications %}<span class="badge bg-danger ms-1">{{ unread_notifications }} unread</span>{% endif %}
+    </h4>
+    {% if unread_notifications %}
+    <form method="POST" action="{% url 'notification_mark_all_read' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-check2-all me-1"></i>Mark all as read</button>
+    </form>
+    {% endif %}
+</div>
+
+<div class="card">
+    <ul class="list-group list-group-flush">
+        {% for n in notifications %}
+        <li class="list-group-item notif-item kind-{{ n.kind }} {% if not n.is_read %}unread{% endif %} d-flex justify-content-between align-items-start gap-3">
+            <div>
+                <div class="fw-semibold">🔔 {{ n.title }}</div>
+                <div class="text-muted">"{{ n.message }}"</div>
+                <div class="small text-muted mt-1">{{ n.created_at|timesince }} ago</div>
+            </div>
+            {% if not n.is_read %}
+            <form method="POST" action="{% url 'notification_mark_read' n.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm text-nowrap">Mark read</button>
+            </form>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li class="list-group-item"><div class="empty-state"><i class="bi bi-bell-slash"></i>You have no notifications.</div></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

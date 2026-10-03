@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center py-5">
+    <span class="brand-badge mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+        <i class="bi bi-briefcase-fill"></i>
+    </span>
+    <h1 class="display-5 fw-bold mt-3">Employee Leave Management System</h1>
+    <p class="lead text-muted mx-auto" style="max-width:520px;">
+        A simple, professional way for employees to apply for leave and for HR
+        to track, approve, and manage requests.
+    </p>
+    <div class="d-flex justify-content-center gap-2 mt-4">
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+    </div>
+</div>
+
+{% endblock %}

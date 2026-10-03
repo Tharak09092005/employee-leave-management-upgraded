@@ -1,0 +1,10 @@
+{# Expects `bars` (list of label/count/percent/color) #}
+{% for bar in bars %}
+<div class="bar-row">
+    <div class="bar-label" title="{{ bar.label }}">{{ bar.label }}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:{{ bar.percent }}%; background:{{ bar.color }};"></div></div>
+    <div class="bar-count">{{ bar.count }}</div>
+</div>
+{% empty %}
+<div class="text-muted small">No data yet.</div>
+{% endfor %}

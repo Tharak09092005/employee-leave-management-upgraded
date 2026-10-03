@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow-sm" style="max-width:600px; width:100%;">
+
+        <div class="card-header"><i class="bi bi-pencil-square me-2 text-primary"></i>Edit Profile</div>
+
+        <div class="card-body p-4">
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold" for="{{ form.first_name.id_for_label }}">First Name</label>
+                        {{ form.first_name }}
+                        {% for e in form.first_name.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                        {{ form.last_name }}
+                        {% for e in form.last_name.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {% for e in form.email.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.phone.id_for_label }}">Phone Number</label>
+                    {{ form.phone }}
+                    {% for e in form.phone.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.address.id_for_label }}">Address</label>
+                    {{ form.address }}
+                    {% for e in form.address.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+                </div>
+
+                <hr>
+                <p class="text-muted small mb-2">These details are managed by HR and cannot be changed here.</p>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Employee ID</label>
+                        <input type="text" class="form-control" value="{{ employee.employee_id }}" disabled>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Department</label>
+                        <input type="text" class="form-control" value="{{ employee.department }}" disabled>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Designation</label>
+                        <input type="text" class="form-control" value="{{ employee.designation }}" disabled>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-check-lg me-1"></i>Save Changes</button>
+                    <a href="{% url 'profile' %}" class="btn btn-outline-secondary flex-fill">Cancel</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{# Expects `balance` from services.get_leave_balance() #}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-piggy-bank-fill me-2 text-primary"></i>Leave Balance {{ balance.year }}</span>
+        <small class="text-muted fw-normal">Deducted only when a request is approved</small>
+    </div>
+    <div class="card-body">
+        <div class="row g-3 mb-3">
+            {% for row in balance.rows %}
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="balance-card">
+                    <div class="text-muted small text-uppercase">{{ row.leave_type }}</div>
+                    <div class="d-flex align-items-baseline gap-2 my-1">
+                        <span class="big">{{ row.remaining }}</span>
+                        <span class="text-muted small">of {{ row.allocated }} days left</span>
+                    </div>
+                    <div class="progress mb-1"><div class="progress-bar {% if row.percent_used >= 100 %}bg-danger{% endif %}" style="width:{{ row.percent_used }}%"></div></div>
+                    <div class="small text-muted">Used {{ row.used }}{% if row.pending %} &middot; {{ row.pending }} pending{% endif %}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row g-3">
+            <div class="col-4"><div class="balance-total"><div class="num">{{ balance.total_allocated }}</div><div class="small text-muted">Total Allowed</div></div></div>
+            <div class="col-4"><div class="balance-total"><div class="num text-danger">{{ balance.total_used }}</div><div class="small text-muted">Used Leave</div></div></div>
+            <div class="col-4"><div class="balance-total"><div class="num text-success">{{ balance.total_remaining }}</div><div class="small text-muted">Remaining Leave</div></div></div>
+        </div>
+    </div>
+</div>

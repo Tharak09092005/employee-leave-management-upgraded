@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <div style="max-width:640px; width:100%;">
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Employee Profile</div>
+
+        <div class="card-body p-4">
+
+            <div class="text-center mb-4">
+                {% if employee.profile_photo %}
+                    <img src="{{ employee.profile_photo.url }}" class="avatar avatar-lg" alt="Profile photo">
+                {% else %}
+                    <span class="avatar avatar-initials avatar-lg">{{ employee.initials }}</span>
+                {% endif %}
+                <h4 class="fw-bold mt-3 mb-0">{{ employee.first_name }} {{ employee.last_name }}</h4>
+                <p class="text-muted mb-2">{{ employee.designation }}</p>
+
+                <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
+                    <form method="POST" action="{% url 'upload_photo' %}" enctype="multipart/form-data" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="file" name="photo" accept="image/png,image/jpeg" class="form-control form-control-sm" style="max-width:220px;" required>
+                        <button type="submit" class="btn btn-outline-primary btn-sm text-nowrap"><i class="bi bi-camera me-1"></i>{% if employee.profile_photo %}Change{% else %}Upload{% endif %}</button>
+                    </form>
+                    {% if employee.profile_photo %}
+                    <form method="POST" action="{% url 'remove_photo' %}" onsubmit="return confirm('Remove your profile photo?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Remove</button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div class="small text-muted mt-1">JPG or PNG, up to 2 MB.</div>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-person-badge me-2"></i>Employee ID</span>
+                    <span class="fw-semibold">{{ employee.employee_id }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span>
+                    <span class="fw-semibold text-break text-end">{{ employee.email }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-telephone me-2"></i>Phone</span>
+                    <span class="fw-semibold">{{ employee.phone }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-geo-alt me-2"></i>Address</span>
+                    <span class="fw-semibold text-end">{{ employee.address|default:"-"|linebreaksbr }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-building me-2"></i>Department</span>
+                    <span class="fw-semibold">{{ employee.department }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-briefcase me-2"></i>Designation</span>
+                    <span class="fw-semibold">{{ employee.designation }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between gap-3">
+                    <span class="text-muted"><i class="bi bi-calendar-event me-2"></i>Joining Date</span>
+                    <span class="fw-semibold">{{ employee.joining_date }}</span>
+                </li>
+            </ul>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary flex-fill"><i class="bi bi-pencil-square me-1"></i>Edit Profile</a>
+                <a href="{% url 'change_password' %}" class="btn btn-outline-secondary flex-fill"><i class="bi bi-key me-1"></i>Change Password</a>
+            </div>
+
+        </div>
+    </div>
+
+    {% include "_leave_balance.html" %}
+
+    </div>
+</div>
+
+{% endblock %}

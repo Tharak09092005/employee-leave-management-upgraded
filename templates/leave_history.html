@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave History - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Leave History</h4>
+    <a href="{% url 'apply_leave' %}" class="btn btn-primary btn-sm"><i class="bi bi-calendar-plus me-1"></i>Apply Leave</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" class="row g-2 align-items-end">
+            <div class="col-6 col-md-3">
+                <label class="form-label small fw-semibold mb-1">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All</option>
+                    {% for s in statuses %}<option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label small fw-semibold mb-1">Leave Type</label>
+                <select name="leave_type" class="form-select form-select-sm">
+                    <option value="">All</option>
+                    {% for t in leave_types %}<option value="{{ t }}" {% if filters.leave_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold mb-1">From</label>
+                <input type="date" name="from_date" value="{{ filters.from_date }}" class="form-control form-control-sm">
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold mb-1">To</label>
+                <input type="date" name="to_date" value="{{ filters.to_date }}" class="form-control form-control-sm">
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-sm flex-fill">Apply Filter</button>
+                <a href="{% url 'leave_history' %}" class="btn btn-outline-secondary btn-sm flex-fill">Clear Filter</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead>
+                    <tr>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Days</th>
+                        <th>Reason</th>
+                        <th>Document</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for leave in leaves %}
+                    <tr>
+                        <td>{{ leave.leave_type }}</td>
+                        <td>{{ leave.start_date }}</td>
+                        <td>{{ leave.end_date }}</td>
+                        <td>{{ leave.days }}</td>
+                        <td class="text-truncate" style="max-width:260px;" title="{{ leave.reason }}">{{ leave.reason }}</td>
+                        <td>{% if leave.document %}<a href="{% url 'leave_document' leave.id %}" class="text-decoration-none"><i class="bi bi-paperclip"></i> View</a>{% else %}<span class="text-muted">-</span>{% endif %}</td>
+                        <td>{% include "_status_badge.html" with status=leave.status %}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                No leave requests found{% if filters.active %} for the selected filters{% endif %}.
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

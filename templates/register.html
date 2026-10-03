@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow-sm" style="max-width:560px; width:100%;">
+
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <span class="brand-badge mb-2" style="width:52px;height:52px;font-size:1.5rem;">
+                    <i class="bi bi-person-plus-fill"></i>
+                </span>
+                <h3 class="fw-bold mt-3 mb-0">Create your account</h3>
+                <p class="text-muted">Register as a new employee</p>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Employee ID</label>
+                    <input type="text" class="form-control" name="employee_id" value="{{ form_data.employee_id|default:'' }}" placeholder="e.g. EMP103" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">First Name</label>
+                        <input type="text" class="form-control" name="first_name" value="{{ form_data.first_name|default:'' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" value="{{ form_data.last_name|default:'' }}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" class="form-control" name="email" value="{{ form_data.email|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Phone</label>
+                    <input type="text" class="form-control" name="phone" value="{{ form_data.phone|default:'' }}" placeholder="e.g. 9876543210" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirm_password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
+                    <i class="bi bi-check2-circle me-1"></i> Register
+                </button>
+            </form>
+
+            <p class="text-center text-muted mt-4 mb-0">
+                Already have an account?
+                <a href="{% url 'login' %}" class="fw-semibold text-decoration-none">Login here</a>
+            </p>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

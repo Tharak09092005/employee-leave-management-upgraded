@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Leaves - LeaveDesk{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="fw-bold mb-0"><i class="bi bi-card-checklist me-2 text-primary"></i>Manage Leave Requests</h4>
+
+    <form method="GET" class="d-flex gap-2">
+        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="" {% if not status_filter %}selected{% endif %}>All Statuses</option>
+            <option value="Pending" {% if status_filter == "Pending" %}selected{% endif %}>Pending</option>
+            <option value="Approved" {% if status_filter == "Approved" %}selected{% endif %}>Approved</option>
+            <option value="Rejected" {% if status_filter == "Rejected" %}selected{% endif %}>Rejected</option>
+        </select>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Employee ID</th>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Days</th>
+                        <th>Reason</th>
+                        <th>Document</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for leave in leaves %}
+                    <tr>
+                        <td><a href="{% url 'employee_detail' leave.employee.pk %}" class="text-decoration-none">{{ leave.employee.first_name }} {{ leave.employee.last_name }}</a></td>
+                        <td>{{ leave.employee.employee_id }}</td>
+                        <td>{{ leave.leave_type }}</td>
+                        <td>{{ leave.start_date }}</td>
+                        <td>{{ leave.end_date }}</td>
+                        <td>{{ leave.days }}</td>
+                        <td class="text-truncate" style="max-width:220px;" title="{{ leave.reason }}">{{ leave.reason }}</td>
+                        <td>{% if leave.document %}<a href="{% url 'leave_document' leave.id %}" class="text-decoration-none"><i class="bi bi-download"></i> Download</a>{% else %}<span class="text-muted">-</span>{% endif %}</td>
+                        <td>
+                            {% if leave.status == "Approved" %}
+                                <span class="badge bg-success">Approved</span>
+                            {% elif leave.status == "Rejected" %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if leave.status == "Pending" %}
+                            <form method="POST" action="{% url 'approve_leave' leave.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'reject_leave' leave.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-x-lg"></i> Reject
+                                </button>
+                            </form>
+                            {% else %}
+                                <span class="text-muted small">No action needed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10">
+                            <div class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                No leave requests found{% if status_filter %} for "{{ status_filter }}"{% endif %}.
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
